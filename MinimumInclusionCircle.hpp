@@ -1,4 +1,4 @@
-# include <Siv3D.hpp>
+﻿# include <Siv3D.hpp>
 
 // 色付きの円
 struct CircleItem 
@@ -27,7 +27,7 @@ struct CircleItem
 //  包含円の半径を "円の中心 と 円の中心から最も遠い点までの距離" とすると、これを最小化すれば最小包含円を得られる。
 
 
-CircleItem MinimumInclusionCircle(Array<Vec2>& points)
+CircleItem MinimumInclusionCircle(Array<Vec2>& points, bool anime = false)
 {	
 	Vec2 center(0, 0);
 	double radius = 10.0;
@@ -79,7 +79,7 @@ CircleItem MinimumInclusionCircle(Array<Vec2>& points)
 			}
 
 			//  描画関数
-			if(update) 
+			if(update && anime) 
 			{
 				circle = CircleItem(center_y, MaxDist(center_y)+10.0, Color(U"#3c3c66"));
 				circle.draw();
