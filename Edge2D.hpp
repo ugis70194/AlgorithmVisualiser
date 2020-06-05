@@ -14,7 +14,7 @@ namespace ugis
 {       
 
     /// <summary>
-    /// 辺の状態を表す
+    /// 辺の状態を表す列挙型
     /// </summary>
     enum class EdgeState
     {
