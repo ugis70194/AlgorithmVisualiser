@@ -1,21 +1,14 @@
-# pragma once
+﻿# pragma once
 # ifndef ugis_VERTEX_INCLUDED
     # define ugis_VERTEX_INCLUDED
 # endif
 
-# include <Siv3D.hpp>
+# include <Siv3D/Vector2D.hpp>
+using namespace s3d;
+# include <State.hpp>
 
 namespace ugis
 {     
-    /// <summary>
-    /// 頂点の状態を表す列挙型
-    /// </summary>
-    enum class VertexState
-    {
-        Unsearched = 0,
-        Searched = 1,
-        Confirmed = 2
-    };
 
     /// <summary>
     /// 二次元グラフ上の頂点
@@ -25,7 +18,7 @@ namespace ugis
         using value_type = Vec2;
 
         value_type position;
-        VertexState state;
+        State state;
         
         /// <summary>
 		/// デフォルトコンストラクタ
@@ -33,7 +26,7 @@ namespace ugis
         Vertex2D() noexcept = default;
         constexpr Vertex2D(const Vertex2D&) noexcept = default;
 
-        Vertex2D(const Vec2& _position, VertexState _state = VertexState::Unsearched) noexcept 
+        Vertex2D(const Vec2& _position, State _state = State::Unsearched) noexcept 
             : position(_position)
             , state(_state) {}
         

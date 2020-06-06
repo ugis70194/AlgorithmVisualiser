@@ -1,9 +1,9 @@
-# pragma once
+﻿# pragma once
 # ifndef ugis_EDGE2D_INCLUDED
     # define ugis_EDGE2D_INCLUDED
 # endif
 
-# include <Siv3D.hpp>
+# include <State.hpp>
 
 // edgeを描くには2つの頂点の位置が必要
 // edge class objectに頂点の位置を持たせるのはメモリの無駄
@@ -13,15 +13,6 @@
 namespace ugis
 {       
 
-    /// <summary>
-    /// 辺の状態を表す
-    /// </summary>
-    enum class EdgeState
-    {
-        Unsearched = 0,
-        Searched = 1,
-        Confirmed = 2
-    };
 
     /// <summary>
     /// ２次元グラフ上の辺
@@ -32,7 +23,7 @@ namespace ugis
 
         value_type from; 
         value_type to;  
-        EdgeState state; 
+        State state; 
 
         /// <summary>
 		/// デフォルトコンストラクタ
@@ -40,28 +31,32 @@ namespace ugis
         Edge2D() noexcept = default;
         constexpr Edge2D(const Edge2D&) noexcept = default; 
 
-        constexpr Edge2D(value_type _from, value_type _to, const enum EdgeState _state = EdgeState::Unsearched) noexcept
+        constexpr Edge2D(value_type _from, value_type _to, State _state = State::Unsearched) noexcept
             : from(_from)
             , to(_to)
-            , state(_state) {}
+            , state(_state) { if(from > to) std::swap(from, to); }
 
         template<class X, class Y, std::enable_if_t< std::is_integral_v<X> && std::is_integral_v<Y> >* = nullptr>
-        constexpr Edge2D(X _from, Y _to, const enum EdgeState _state = EdgeState::Unsearched) noexcept
+        constexpr Edge2D(X _from, Y _to, State _state = State::Unsearched) noexcept
             : from(static_cast<value_type>(_from))
             , to(static_cast<value_type>(_to))
-            , state(_state) {}
+            , state(_state) { if(from > to) std::swap(from, to); }
 
         template<class X, class Y, std::enable_if_t< std::is_integral_v<X> && std::is_integral_v<Y> >* = nullptr>
-        Edge2D(const std::pair<X, Y>& vertices, enum EdgeState _state = EdgeState::Unsearched) noexcept
+        Edge2D(const std::pair<X, Y>& vertices, State _state = State::Unsearched) noexcept
             : from(static_cast<value_type>(vertices.first))
             , to(static_cast<value_type>(vertices.second))
-            , state(_state) {}
+            , state(_state) { if(from > to) std::swap(from, to); }
 
         template<class X, class Y, std::enable_if_t< std::is_integral_v<X> && std::is_integral_v<Y> >* = nullptr>
-        Edge2D(std::pair<X, Y> vertices, enum EdgeState state = EdgeState::Unsearched) noexcept
+        Edge2D(std::pair<X, Y> vertices, State _state = State::Unsearched) noexcept
             : from(static_cast<value_type>(vertices.first))
             , to(static_cast<value_type>(vertices.second))
-            , state(_state) {}
+            , state(_state) { if(from > to) std::swap(from, to); }
         
+        inline const bool operator==(const Edge2D& e) const 
+        {
+            return (e.from == from && e.to == to);
+        }
     };
 }

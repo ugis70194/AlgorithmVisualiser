@@ -1,4 +1,4 @@
-# Algorithm Visualiser for OpenSiv3D
+﻿# Algorithm Visualiser for OpenSiv3D
 
 ## Contents
 ### MinimumInclusionCircle(最小包含円)
