@@ -8,11 +8,6 @@ using namespace s3d;
 
 namespace ugis
 {	
-	
-	// constexpr Vec2 refPoint(50, 50);
-	//const size_t width(Window::ClientWidth() - 100);
-	//const size_t height(Window::ClientHeight() - 100);
-
 	/// <summary>
     /// ２次元グラフ
     /// </summary>
