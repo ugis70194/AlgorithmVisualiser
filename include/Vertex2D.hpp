@@ -26,7 +26,7 @@ namespace ugis
         Vertex2D() noexcept = default;
         constexpr Vertex2D(const Vertex2D&) noexcept = default;
 
-        Vertex2D(const Vec2& _position, State _state = State::Unsearched) noexcept 
+        Vertex2D(const Vec2& _position,const State _state = State::Unsearched) noexcept 
             : position(_position)
             , state(_state) {}
         

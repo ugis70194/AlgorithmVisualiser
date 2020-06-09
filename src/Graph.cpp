@@ -1,7 +1,8 @@
 ﻿# include<Graph.hpp>
 
 namespace ugis
-{
+{	
+
 	void Graph::init(size_t width, size_t height, double radius, double thickness, Array<ColorF> vertexColor, Array<ColorF> edgeColor, Font font)
 	{	
 		m_width = width;
@@ -15,6 +16,7 @@ namespace ugis
 		vertex.clear();
 		edges.clear();
 
+		//頂点をランダムに配置
 		{	
 			Array<Vec2> tmp;
 			for ([[maybe_unused]] const auto& i : Range(0, connection.size() - 1))
@@ -27,6 +29,7 @@ namespace ugis
 				vertex << v;
 			}
 		}
+		//辺の情報を保存
 		for (const auto& i : Range(0, connection.size() - 1))
 		{
 			for (const auto& child : connection[i])
@@ -37,8 +40,7 @@ namespace ugis
 		}
 	}
 
-
-	bool Graph::draw(bool update, double delay)
+	bool Graph::draw(bool update, bool displayEdgeWeight, double delay)
 	{
 		if (vertex.size() == 0) return false;
 		if (0 <= m_grab && m_grab < vertex.size())
@@ -62,6 +64,8 @@ namespace ugis
         }
 		
 		if (edges.size() == 0) return false;
+
+		//辺を描画
 		for (const auto& edge : edges)
 		{
 			size_t state = static_cast<size_t>(edge.state);
@@ -69,6 +73,7 @@ namespace ugis
 			const Vec2 e = vertex[edge.from].position;
 			const Line line(s, e);
 
+			//頂点が直線上に並んでいるとき、辺を曲げる
 			LineString L;
 			L << s;
 			ClearPrint();
@@ -87,23 +92,33 @@ namespace ugis
 			}
 			L << e;
 			L.drawCatmullRom(m_thickness, m_edgeColor[state]);
+			
+			//辺の重みを描画
+			if(!displayEdgeWeight) continue;
+			if(L.size() == 2)
+			{
+				m_font(U"{}"_fmt(edge.weight)).draw(line.center());
+			} else {
+				m_font(U"{}"_fmt(edge.weight)).draw(L[L.size()/2]);
+			}
 		}
 		
-
+		//頂点を描画
 		size_t idx = 0;
 		for (const auto& v : vertex)
 		{	
 			size_t state = static_cast<size_t>(v.state);
 			Circle(v.position, m_radius).draw(m_vertexColor[state]);
-			m_font(U"{}"_fmt(idx++)).drawAt(v.position, Palette::Black);
+			m_font(U"{}"_fmt(idx++)).drawAt(v.position, Palette::Black); //頂点番号を描画
 		}
-
+		
+		//描画の遅延
 		if (update)
 		{
 			auto timer = Timer(delay, true);
 			while (!timer.reachedZero()) {}
 			return System::Update();
 		}
-		return false;
+		return true;
 	}
 }

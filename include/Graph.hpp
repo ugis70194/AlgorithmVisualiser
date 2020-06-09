@@ -6,6 +6,7 @@ using namespace s3d;
 # include<Vertex2D.hpp>
 
 
+
 namespace ugis
 {	
 	/// <summary>
@@ -14,6 +15,8 @@ namespace ugis
 	class Graph
 	{
 	private:
+		using ListType = std::pair<size_t, int32>;
+
 		Font m_font = Font(24);
 		Array<ColorF> m_vertexColor = defaultColor();
 		Array<ColorF> m_edgeColor = defaultColor();
@@ -25,7 +28,7 @@ namespace ugis
 	public:
 		Array<ugis::Vertex2D> vertex;
 		Array<Edge2D> edges;
-		Array<Array<size_t>> connection;
+		Array<Array<ListType>> connection;
 
 		static Array<ColorF> defaultColor() 
 		{
@@ -47,14 +50,37 @@ namespace ugis
 		constexpr Graph(const Graph&) = default;
 
 		/// <summary>
+		/// 隣接リスト(辺の重み付き)からグラフを作成します。
+		/// </summary>
+		/// <param name="connection">
+		/// グラフを表す隣接リスト
+		/// </param>
+		template<class X, class W, std::enable_if_t< std::is_integral_v<X> && std::is_arithmetic_v<W> >* = nullptr>
+		constexpr Graph(Array<Array<std::pair<X, W>>>& _connection)
+			: connection(static_cast<Array<Array<ListType>>>(_connection)){ init(); }
+		
+		/// <summary>
 		/// 隣接リストからグラフを作成します。
 		/// </summary>
 		/// <param name="connection">
 		/// グラフを表す隣接リスト
 		/// </param>
-		template<class X, std::enable_if_t< std::is_integral_v<X>>* = nullptr>
+		template<class X, std::enable_if_t<std::is_integral_v<X>>* = nullptr>
 		constexpr Graph(Array<Array<X>>& _connection)
-			: connection(static_cast<Array<Array<size_t>>>(_connection)){ init(); }
+		{ 	
+			Array<Array<ListType>> newConnection;
+			for(const Array<X>& children : _connection)
+			{
+				Array<ListType> tmp;
+				for(const X& child : children)
+				{
+					tmp << ListType(child, 1);
+				}
+				newConnection << tmp;
+			}
+			connection = newConnection;
+			init(); 
+		}
 
 		/// <summary>
 		/// 隣接リストを返す関数からグラフを作成します。
@@ -90,12 +116,25 @@ namespace ugis
 		/// 辺の 各状態を表す色 の配列
 		/// 前から Unsearched, Searched, Confirmedの順に割り当てられます。
 		/// </param>
+		/// <param name="font">
+		/// 頂点番号、辺の重みなどのフォント
+		/// </param>
 		void init(size_t width = 800, size_t height = 600, double radius = 10.0, double thickness = 3.0
 		, Array<ColorF> vertexColor = defaultColor(), Array<ColorF> edgeColor = defaultColor(), Font font = defaultFont());
 
 		/// <summary>
 		/// グラフの描画します。
 		/// </summary>
-		bool draw(bool update = false, double delay = 0.5);
+		/// <param name="update">
+		/// draw関数内で、System::Update()をするかどうか
+		/// </param>
+		/// <param name="delay">
+		/// 描画を遅延する時間
+		/// (update==trueの時しか使用されません)
+		/// </param>
+		/// <return>
+		/// 描画の成功/失敗
+		/// </return>
+		bool draw(bool update = false,bool displayEdgeWeight = true, double delay = 0.5);
 	};
 }
