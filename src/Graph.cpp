@@ -47,10 +47,10 @@ namespace ugis
 	{
 		if (vertex.size() == 0) return false;
 		if (0 <= m_grab && m_grab < vertex.size())
-        {
-            // 移動量分だけ円を移動
-            vertex[m_grab].position.moveBy(Cursor::Delta());
-        }
+		{
+			// 移動量分だけ円を移動
+			vertex[m_grab].position.moveBy(Cursor::Delta());
+		}
 
 		for(auto i  : Range(0, vertex.size()))
 		{	
