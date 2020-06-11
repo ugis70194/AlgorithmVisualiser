@@ -116,6 +116,7 @@ namespace ugis
 			m_font(U"{}"_fmt(idx++)).drawAt(v.position, Palette::Black); //頂点番号を描画
 		}
 
+		//各頂点までの距離を描画
 		{	
             // ビューポートの適用
             const ScopedViewport2D viewport(m_viewportRect);
@@ -128,7 +129,7 @@ namespace ugis
 			Print << U"頂点  距離";
 			for(auto& i : Range(begin, end - 1))
 			{
-				Print << U"{}|{}"_fmt(i, (dist[i] == INF ? U"NaN" : Format(dist[i])));
+				Print << U"{}|  {}"_fmt(i, (dist[i] == INF ? U"NaN" : Format(dist[i])));
 			}
         }
 		
