@@ -26,10 +26,13 @@ namespace ugis
 		size_t m_width = 800;
 		int32 m_grab = -1;
 		Rect m_viewportRect = Rect(0, 0, 120, 600);
+		size_t m_begin = 0;
 	public:
 		Array<ugis::Vertex2D> vertex;
 		Array<Edge2D> edges;
 		Array<Array<ListType>> connection;
+		Array<int32> dist;
+		const int32 INF = static_cast<int32>(1e9);
 
 		static Array<ColorF> defaultColor() 
 		{

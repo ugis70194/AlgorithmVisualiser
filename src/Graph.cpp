@@ -15,13 +15,16 @@ namespace ugis
 		
 		vertex.clear();
 		edges.clear();
+		dist.assign(connection.size(), INF);
 
 		//頂点をランダムに配置
 		{	
+			const double offset_x = static_cast<double>(m_width)*0.2 + m_radius*2;
+			const double offset_y = m_radius*2;
 			Array<Vec2> tmp;
 			for ([[maybe_unused]] const auto& i : Range(0, connection.size() - 1))
 			{
-				tmp << RandomVec2(RectF(m_width*0.2 + m_radius*2, m_radius*2, static_cast<double>(m_width) - m_radius*2, static_cast<double>(m_height) - m_radius*2));
+				tmp << RandomVec2(RectF(offset_x, offset_y, static_cast<double>(m_width) - offset_x, static_cast<double>(m_height) - offset_y));
 			}
 			std::sort(tmp.begin(), tmp.end(), [](Vec2& a, Vec2& b) { return a.x == b.x ? a.y < b.y : a.x < b.x; });
 			for (const auto& v : tmp)
@@ -113,12 +116,20 @@ namespace ugis
 			m_font(U"{}"_fmt(idx++)).drawAt(v.position, Palette::Black); //頂点番号を描画
 		}
 
-
-		m_viewportRect.drawFrame(0, 2, Palette::Seagreen);
 		{	
             // ビューポートの適用
             const ScopedViewport2D viewport(m_viewportRect);
-			Rect(0, 0, m_viewportRect.size).draw(ColorF(0.8, 0.9, 1.0));  
+			Rect(0, 0, m_viewportRect.size).draw(ColorF(U"#1c1c1c"));  
+			
+
+			size_t begin = m_begin;
+			size_t end = Min(vertex.size(), begin + 20);
+			ClearPrint();
+			Print << U"頂点  距離";
+			for(auto& i : Range(begin, end - 1))
+			{
+				Print << U"{}|{}"_fmt(i, (dist[i] == INF ? U"NaN" : Format(dist[i])));
+			}
         }
 		
 		//描画の遅延
