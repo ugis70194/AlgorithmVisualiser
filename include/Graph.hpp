@@ -17,7 +17,7 @@ namespace ugis
 	private:
 		using ListType = std::pair<size_t, int32>;
 
-		Font m_font = Font(24);
+		Font m_font = Font(16);
 		Array<ColorF> m_vertexColor = defaultColor();
 		Array<ColorF> m_edgeColor = defaultColor();
 		double m_radius = 10.0;
@@ -25,6 +25,7 @@ namespace ugis
 		size_t m_height = 600;
 		size_t m_width = 800;
 		int32 m_grab = -1;
+		Rect m_viewportRect = Rect(0, 0, 120, 600);
 	public:
 		Array<ugis::Vertex2D> vertex;
 		Array<Edge2D> edges;
@@ -40,13 +41,13 @@ namespace ugis
 		};
 		static Font defaultFont() 
 		{
-			return Font(24);
+			return Font(16);
 		}
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		Graph() noexcept = default;
+		Graph() = default;
 		constexpr Graph(const Graph&) = default;
 
 		/// <summary>
@@ -136,5 +137,16 @@ namespace ugis
 		/// 描画の成功/失敗
 		/// </return>
 		bool draw(bool update = false,bool displayEdgeWeight = true, double delay = 0.5);
+
+		///
+		/// ここにドキュメントをかく
+		/// 
+		void load(String path);
+
+		/*
+		TODO:	loadをコンストラクタでできるように
+				頂点vまでの最短距離の表をつくる
+
+		*/
 	};
 }
