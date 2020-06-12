@@ -1,5 +1,6 @@
 ﻿#pragma once
 # include<Siv3D.hpp>
+# include<queue>
 using namespace s3d;
 
 # include<Edge2D.hpp>
@@ -18,15 +19,19 @@ namespace ugis
 		using ListType = std::pair<size_t, int32>;
 
 		Font m_font = Font(16);
+		Font m_f = Font(20);
 		Array<ColorF> m_vertexColor = defaultColor();
 		Array<ColorF> m_edgeColor = defaultColor();
 		double m_radius = 10.0;
-		double m_thickness = 3.0;
+		double m_thickness = 1.0;
 		size_t m_height = 600;
 		size_t m_width = 800;
 		int32 m_grab = -1;
 		Rect m_viewportRect = Rect(0, 0, 120, 600);
-		size_t m_begin = 0;
+		int32 m_begin = 0;
+		bool m_GUIEnable = true;
+		Array<Vec2> m_weightPos;
+		Camera2D m_camera;
 	public:
 		Array<ugis::Vertex2D> vertex;
 		Array<Edge2D> edges;
@@ -123,8 +128,8 @@ namespace ugis
 		/// <param name="font">
 		/// 頂点番号、辺の重みなどのフォント
 		/// </param>
-		void init(size_t width = 800, size_t height = 600, double radius = 10.0, double thickness = 3.0
-		, Array<ColorF> vertexColor = defaultColor(), Array<ColorF> edgeColor = defaultColor(), Font font = defaultFont());
+		void init(size_t width = 800, size_t height = 600, double radius = 10.0, double thickness = 1.0
+		, Font font = defaultFont(), Array<ColorF> vertexColor = defaultColor(), Array<ColorF> edgeColor = defaultColor());
 
 		/// <summary>
 		/// グラフの描画します。
@@ -139,12 +144,16 @@ namespace ugis
 		/// <return>
 		/// 描画の成功/失敗
 		/// </return>
-		bool draw(bool update = false,bool displayEdgeWeight = true, double delay = 0.5);
+		bool draw(bool update = false,bool displayEdgeWeight = false, double delay = 0.5, size_t hightlight = 1e9);
 
 		///
 		/// ここにドキュメントをかく
 		/// 
 		void load(String path);
+
+		void GUI(bool enable = true);
+
+		void BFS(size_t start, size_t goal, double delay = 0.2);
 
 		/*
 		TODO:	loadをコンストラクタでできるように
